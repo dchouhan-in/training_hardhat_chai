@@ -13,9 +13,9 @@ describe("ERC20 contract", () => {
     let address1: HardhatEthersSigner
     let address2: HardhatEthersSigner
 
+
     it("Deploy Contract!", async () => {
         [owner, address1, address2] = await ethers.getSigners();
-
 
         hardhatToken = await ethers.deployContract("ERC20Token", [tokenName, tokenSymbol], owner);
 
