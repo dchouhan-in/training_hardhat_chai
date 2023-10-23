@@ -1,21 +1,17 @@
 import { ethers } from "hardhat";
+import { ERC20Token } from "../typechain-types";
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
 
-  const lockedAmount = ethers.parseEther("0.001");
+  const tokenName = "TEST"
+  const tokenSymbol = "TS"
 
-  const lock = await ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
-  });
+  const contract: ERC20Token = await ethers.deployContract("ERC20Token", [tokenName, tokenSymbol]);
 
-  await lock.waitForDeployment();
+  await contract.waitForDeployment();
 
   console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
+    `contract deployed for token - , ${await contract.name()} | ${await contract.symbol()}`
   );
 }
 
