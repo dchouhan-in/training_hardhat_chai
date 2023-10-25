@@ -6,18 +6,16 @@ const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {
-      loggingEnabled: true,
-      accounts: [{ privateKey: process.env.PRIVATE_KEY!, balance: 10e21.toString() }],
       forking: {
         url: process.env.SEPOLIA_URL!,
-        blockNumber: 18413100,
+        blockNumber: 4547153,
       },
       chainId: Number(process.env.CHAIN_ID)
       , mining: {
         mempool: {
           order: "fifo"
         },
-        interval: [3000, 10e3]
+        interval: [100, 1000]
       }
     },
     sepolia: {

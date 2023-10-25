@@ -5,19 +5,24 @@ import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 
 // const ERC20Token = artifacts.require("ERC20Token");
 
+
+
+
 describe("ERC20 contract", () => {
     let hardhatToken: ERC20Token
     let tokenName = "TEST"
+
     let tokenSymbol = "TS"
     let owner: HardhatEthersSigner
     let address1: HardhatEthersSigner
     let address2: HardhatEthersSigner
 
 
-    it("Deploy Contract!", async () => {
+    before("Deploy Contract!", async () => {
         [owner, address1, address2] = await ethers.getSigners();
 
         hardhatToken = await ethers.deployContract("ERC20Token", [tokenName, tokenSymbol], owner);
+        await hardhatToken.waitForDeployment();
 
         const ownerBalance = await hardhatToken.balanceOf(owner.address);
         expect(await hardhatToken.totalSupply()).to.equal(ownerBalance);
@@ -35,8 +40,13 @@ describe("ERC20 contract", () => {
         expect(totalSupply).to.equal(1000)
     });
 
+    it("should have the correct decimals", async () => {
+        const decimals = await hardhatToken.decimals();
+        expect(decimals).to.equal(6)
+    });
+
     it("should mint tokens to the owner", async () => {
-        await hardhatToken._mint(owner, 100);
+        await (await hardhatToken._mint(owner, 100)).wait()
         const balance = await hardhatToken.balanceOf(owner)
         expect(balance).equal(1100)
     });
@@ -46,7 +56,7 @@ describe("ERC20 contract", () => {
         const initialBalanceOwner = await hardhatToken.balanceOf(owner);
         const initialBalanceRecipient = await hardhatToken.balanceOf(address1);
 
-        await hardhatToken.transfer(address1, amount, { from: owner });
+        await (await hardhatToken.transfer(address1, amount, { from: owner })).wait();
 
 
         const finalBalanceOwner = await hardhatToken.balanceOf(owner);
@@ -61,7 +71,7 @@ describe("ERC20 contract", () => {
         const amount = 50;
 
         // Approve the spender to spend tokens on behalf of the owner
-        await hardhatToken.approve(address1, amount, { from: owner });
+        await (await hardhatToken.approve(address1, amount, { from: owner })).wait();
 
         // Check the allowance
         const allowance = await hardhatToken.allowance(owner, address1);
@@ -71,7 +81,7 @@ describe("ERC20 contract", () => {
         // Transfer tokens from the owner to another account using the approved spender
         const initialBalanceOwner = await hardhatToken.balanceOf(owner);
 
-        const x = await hardhatToken.connect(address1).transferFrom(owner, address2, amount);
+        await (await hardhatToken.connect(address1).transferFrom(owner, address2, amount)).wait();
 
         const finalBalanceOwner = await hardhatToken.balanceOf(owner);
         const finalBalanceRecipient = await hardhatToken.balanceOf(address2);
@@ -81,6 +91,8 @@ describe("ERC20 contract", () => {
 
         expect(
             finalBalanceRecipient).equal(amount) // Recipient had 0 tokens, 50 were transferred
-
     });
+
+
+
 });
