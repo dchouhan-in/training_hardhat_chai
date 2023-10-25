@@ -13,10 +13,25 @@
 		"chai": "^4.2.0",
 		"ethers": "^6.4.0",
 		"hardhat": "^2.18.2",
-		"hardhat-gas-reporter": "^1.0.8",
+		"hardhat-gas-reporter": "^1.0.9",
 		"solidity-coverage": "^0.8.0",
 		"ts-node": ">=8.0.0",
 		"typechain": "^8.1.0",
 		"typescript": ">=4.5.0"
+	},
+	"scripts": {
+		"check": "",
+		"clean": "pnpm hardhat clean",
+		"compile": "pnpm hardhat compile",
+		"console": "pnpm hardhat console",
+		"coverage": "pnpm hardhat coverage",
+		"flatten": "pnpm hardhat flatten",
+		"gas-reporter:merge": "pnpm hardhat gas-reporter:merge",
+		"help": "pnpm hardhat help",
+		"node": "pnpm hardhat node",
+		"run": "pnpm hardhat run",
+		"test": "pnpm hardhat test",
+		"typechain": "pnpm hardhat typechain",
+		"verify": "pnpm hardhat verify"
 	}
 }
