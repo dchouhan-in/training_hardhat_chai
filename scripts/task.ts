@@ -1,4 +1,3 @@
-import { ethers } from "hardhat";
 import { task } from "hardhat/config";
 
 task("balances", "Prints the balances of all the addresses!").addParam("contract", "contract address").setAction(async (arg) => {

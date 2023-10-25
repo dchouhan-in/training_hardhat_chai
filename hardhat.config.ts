@@ -1,6 +1,7 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 
+
 const config: HardhatUserConfig = {
 
   defaultNetwork: "hardhat",
@@ -65,3 +66,5 @@ const config: HardhatUserConfig = {
 
 export default config;
 
+
+require("./scripts/task")
