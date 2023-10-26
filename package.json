@@ -30,9 +30,12 @@
 		"help": "pnpm hardhat help",
 		"node": "pnpm hardhat node",
 		"run": "pnpm hardhat run",
-		"test": "pnpm hardhat test",
+		"test": "pnpm hardhat test --network hardhat",
 		"typechain": "pnpm hardhat typechain",
 		"verify": "pnpm hardhat verify",
-		"balances": "pnpm hardhat balances --contract 0xaE5863e003707ca37855bC1C3da4fC1437E42921 --count 30" 
+		"balances": "pnpm hardhat balances --contract 0xaE5863e003707ca37855bC1C3da4fC1437E42921 --count 30"
+	},
+	"dependencies": {
+		"network-helpers": "link:@nomicfoundation/hardhat-toolbox/network-helpers"
 	}
 }

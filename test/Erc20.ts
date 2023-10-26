@@ -1,21 +1,26 @@
-import { expect } from "chai";
-import { artifacts, ethers } from "hardhat";
-import { ERC20Token } from "../typechain-types";
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
+import { expect } from "chai";
+import { ethers } from "hardhat";
+import { ERC20Token } from "../typechain-types";
 
-// const ERC20Token = artifacts.require("ERC20Token");
 
-
+import { loadFixture }
+    from "@nomicfoundation/hardhat-toolbox/network-helpers"
 
 
 describe("ERC20 contract", () => {
     let hardhatToken: ERC20Token
     let tokenName = "TEST"
-
     let tokenSymbol = "TS"
     let owner: HardhatEthersSigner
     let address1: HardhatEthersSigner
     let address2: HardhatEthersSigner
+
+    async function approveSpender() {
+        const amount = 50;
+        // Approve the spender to spend tokens on behalf of the owner
+        await (await hardhatToken.approve(address1, amount, { from: owner })).wait();
+    }
 
 
     before("Deploy Contract!", async () => {
@@ -25,7 +30,9 @@ describe("ERC20 contract", () => {
         await hardhatToken.waitForDeployment();
 
         const ownerBalance = await hardhatToken.balanceOf(owner.address);
+
         expect(await hardhatToken.totalSupply()).to.equal(ownerBalance);
+
     })
 
     it("should have the correct name and symbol", async () => {
@@ -66,14 +73,17 @@ describe("ERC20 contract", () => {
         expect(Number(finalBalanceRecipient)).equal(Number(initialBalanceRecipient) + amount);
     });
 
+    it("should throw error, for trying to transfer amount with insufficient balance!", async () => {
+        const amount = 1000000;
+        expect(await hardhatToken.transfer(address1, amount, { from: owner })).to.be.reverted
+    });
+
     it("should approve and transfer tokens on behalf of an owner", async () => {
 
         const amount = 50;
 
-        // Approve the spender to spend tokens on behalf of the owner
-        await (await hardhatToken.approve(address1, amount, { from: owner })).wait();
+        await loadFixture(approveSpender);
 
-        // Check the allowance
         const allowance = await hardhatToken.allowance(owner, address1);
 
         expect(allowance).equal(amount);
@@ -94,5 +104,15 @@ describe("ERC20 contract", () => {
     });
 
 
+    it("should increment allowance", async () => {
+        const initialAllowance = await hardhatToken.allowance(owner, address1);
+        await loadFixture(approveSpender);
+        const currentAllowance = await hardhatToken.allowance(owner, address1);
+        expect(currentAllowance).equals(Number(initialAllowance) + 50)
+    })
+
+    it("should revert for attempting to spend, as a non approved spender", async () => {
+        expect(await (hardhatToken.transferFrom(address1, address2, 1000))).to.be.reverted
+    })
 
 });
