@@ -24,8 +24,7 @@ const config: HardhatUserConfig = {
       chainId: Number(process.env.CHAIN_ID),
       loggingEnabled: true,
       accounts: {
-        mnemonic: process.env.MNEMONIC,
-        passphrase: process.env.PASS_PHRASE
+        mnemonic: process.env.MNEMONIC!.split("_").join(" ")
       },
       gasPrice: 3000,
       gasMultiplier: 1.5,
