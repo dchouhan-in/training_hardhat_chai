@@ -32,6 +32,7 @@
 		"run": "pnpm hardhat run",
 		"test": "pnpm hardhat test",
 		"typechain": "pnpm hardhat typechain",
-		"verify": "pnpm hardhat verify"
+		"verify": "pnpm hardhat verify",
+		"balances": "pnpm hardhat balances --contract 0xaE5863e003707ca37855bC1C3da4fC1437E42921 --count 30" 
 	}
 }
